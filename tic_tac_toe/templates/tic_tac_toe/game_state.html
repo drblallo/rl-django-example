@@ -1,0 +1,15 @@
+<table>
+{% for row in board %}
+    <tr>
+    {% for slot in row %}
+    <td><a href="{% url 'tic_tac_toe:mark' forloop.parentloop.counter0 forloop.counter0 %}">{{ slot }}</a></td>
+    {% endfor %}
+    <tr>
+{% endfor %}
+<table>
+<p>{{ serialized }}</p>
+<a href="{% url 'tic_tac_toe:reset' %}">reset</a>
+
+{% for action in actions %}
+<br><a href="{% url 'tic_tac_toe:act' action %}">{{ action }}</a>
+{% endfor %}

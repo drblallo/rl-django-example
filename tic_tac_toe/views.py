@@ -139,9 +139,17 @@ def make_converter(rlc_type):
 
 # Custom implementation that may be required to create animations
 def mark(request, x, y):
-    state = efficient_load()
-    if tic_tac_toe.functions.can_mark(state, x, y):
-        print(f"CLICKED ON {x}, {y}")
-        tic_tac_toe.functions.mark(state, x, y)
-        store(state)
+    state = None
+    with FileLock("game_state.lock", timeout=10):
+        if not os.path.exists("game_state.txt"):
+            state = tic_tac_toe.functions.play()
+        else:
+            state = tic_tac_toe.Game()
+            content = tic_tac_toe.String()
+            string = to_rl_string("\n".join(open("game_state.txt", "r").readlines()))
+            tic_tac_toe.functions.from_string(state, string)
+            if tic_tac_toe.functions.can_mark(state, x, y):
+                print(f"CLICKED ON {x}, {y}")
+                tic_tac_toe.functions.mark(state, x, y)
+                store(state)
     return make_game_page(state, request)

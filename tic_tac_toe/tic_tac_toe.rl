@@ -1,9 +1,7 @@
-# RUN: rlc %s -o %t -i %stdlib
-# RUN: %t%exeext
-
-import serialization.to_byte_vector
-import string
-import action
+# this import
+# must be included for this example to work! 
+# it generates needed printer and parsers for
+# the types exposed by the game
 import learn
 
 cls Board:

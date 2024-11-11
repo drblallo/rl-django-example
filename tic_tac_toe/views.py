@@ -20,7 +20,8 @@ def slow_load():
 
     with FileLock("game_state.lock", timeout=10):
         if os.path.exists("game_state.txt"):
-            state.load_string_from_file("game_state.txt")
+            file = "\n".join(open("game_state.txt").readlines())
+            state.load_string(file)
     return state
 
 
@@ -86,7 +87,6 @@ def make_game_page(state, request):
     ]
 
     context = {
-        "tic_tac_toe": tic_tac_toe,
         "board": [
             [state.board.slots[i * 3 + y].value for i in range(3)] for y in range(3)
         ],
@@ -151,5 +151,7 @@ def mark(request, x, y):
             if tic_tac_toe.functions.can_mark(state, x, y):
                 print(f"CLICKED ON {x}, {y}")
                 tic_tac_toe.functions.mark(state, x, y)
-                store(state)
+                string = to_python_string(tic_tac_toe.functions.to_string(state))
+                with open("game_state.txt", "w+") as f:
+                    f.write(string)
     return make_game_page(state, request)

@@ -20,8 +20,7 @@ def slow_load():
 
     with FileLock("game_state.lock", timeout=10):
         if os.path.exists("game_state.txt"):
-            file = "\n".join(open("game_state.txt").readlines())
-            state.load_string(file)
+            state.load_string_from_file("game_state.txt")
     return state
 
 
